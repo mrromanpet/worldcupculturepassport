@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The World Cup of Culture — A Passport Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2E6C9;
+    --paper-deep:#E8D6A8;
+    --ink:#202B36;
+    --ink-soft:#4B5A66;
+    --crimson:#D6443C;
+    --marigold:#EFA53D;
+    --teal:#1F8076;
+    --cobalt:#28456B;
+    --cream:#FFFCF3;
+    --line:#cdb98a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle, rgba(32,43,54,0.07) 1px, transparent 1.3px);
+    background-size:18px 18px;
+    color:var(--ink);
+    font-family:'Nunito Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Fredoka', sans-serif; letter-spacing:.2px;}
+  .mono{font-family:'Space Mono', monospace;}
+  a{color:var(--cobalt);}
+
+  /* ===== HERO ===== */
+  .hero{
+    max-width:980px; margin:0 auto; padding:38px 22px 18px; text-align:center;
+  }
+  .hero .badge{
+    display:inline-block; font-family:'Space Mono',monospace; font-size:12px;
+    letter-spacing:2px; text-transform:uppercase; color:var(--cream);
+    background:var(--ink); padding:5px 14px; border-radius:30px; transform:rotate(-2deg);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:clamp(30px,5.5vw,52px); margin:0 0 10px; color:var(--cobalt);
+    text-shadow:2px 2px 0 var(--marigold);
+  }
+  .hero p{ max-width:640px; margin:0 auto 8px; color:var(--ink-soft); font-size:16px;}
+  .hero .for-students{
+    margin-top:18px; display:inline-block; background:var(--cream);
+    border:2px dashed var(--ink); border-radius:14px; padding:14px 20px;
+    max-width:620px; font-size:15px; text-align:left;
+  }
+  .hero .for-students b{color:var(--crimson);}
+
+  /* ===== NAV STAMPS ===== */
+  .stamp-rail{
+    max-width:1080px; margin:26px auto 6px; padding:0 16px;
+  }
+  .progress-line{
+    text-align:center; font-family:'Space Mono',monospace; font-size:13px;
+    color:var(--ink-soft); margin-bottom:10px;
+  }
+  .stamps{
+    display:flex; flex-wrap:wrap; gap:14px; justify-content:center;
+  }
+  .stamp{
+    cursor:pointer; border:none; background:none; padding:0; text-align:center;
+    width:92px; font-family:'Fredoka',sans-serif;
+  }
+  .stamp .circle{
+    width:74px; height:74px; border-radius:50%; border:3px dashed var(--ink);
+    background:var(--cream); display:flex; align-items:center; justify-content:center;
+    font-size:32px; margin:0 auto 6px; transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 2px 0 rgba(32,43,54,.25);
+  }
+  .stamp:nth-child(odd) .circle{ transform:rotate(-4deg); }
+  .stamp:nth-child(even) .circle{ transform:rotate(3deg); }
+  .stamp:hover .circle, .stamp:focus-visible .circle{ transform:scale(1.08) rotate(0deg); }
+  .stamp.visited .circle{ border-style:solid; background:#fff8e3; box-shadow:inset 0 0 0 2px var(--teal); }
+  .stamp.active .circle{ border-color:var(--crimson); box-shadow:0 0 0 3px rgba(214,68,60,.25); }
+  .stamp span.label{ font-size:12px; color:var(--ink); font-weight:600; }
+
+  /* ===== INTRO PANEL ===== */
+  .panel{ max-width:980px; margin:30px auto; padding:0 16px; }
+  .intro-card{
+    background:var(--cream); border:2px solid var(--ink); border-radius:18px;
+    padding:26px 28px; box-shadow:6px 6px 0 var(--ink);
+  }
+  .intro-card h2{margin-top:0; color:var(--crimson);}
+  .intro-card ol{padding-left:22px;}
+  .intro-card li{margin-bottom:6px;}
+
+  /* ===== COUNTRY PAGE ===== */
+  .country-page{ display:none; }
+  .country-page.active{ display:block; animation:fadeIn .35s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  .country-head{
+    display:flex; flex-wrap:wrap; align-items:center; gap:18px;
+    background:var(--cream); border:2px solid var(--ink); border-radius:18px;
+    padding:20px 24px; box-shadow:6px 6px 0 var(--ink); margin-bottom:20px;
+  }
+  .country-head .flag-stamp{
+    width:84px; height:84px; min-width:84px; border-radius:50%; border:3px dashed var(--ink-accent, var(--ink));
+    display:flex; align-items:center; justify-content:center; font-size:42px; background:var(--paper);
+  }
+  .country-head .titles h2{ margin:0; font-size:30px; color:var(--ink-accent, var(--ink));}
+  .country-head .titles .es{ font-style:italic; color:var(--ink-soft); font-size:14px; margin:0 0 6px;}
+  .country-head .facts-row{ display:flex; flex-wrap:wrap; gap:8px 18px; font-size:13px; color:var(--ink-soft);}
+  .country-head .facts-row span{ margin-right:14px; display:inline-block; }
+  .country-head .facts-row b{color:var(--ink);}
+
+  .photo-strip{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; margin:8px 0 26px; }
+  .polaroid{
+    background:#fff; padding:10px 10px 26px; box-shadow:0 4px 10px rgba(0,0,0,.18);
+    width:190px; transform:rotate(-2deg);
+  }
+  .polaroid:nth-child(2){ transform:rotate(2deg); }
+  .polaroid:nth-child(3){ transform:rotate(-1deg); }
+  .polaroid img{ width:100%; height:140px; object-fit:cover; display:block; background:#ddd; }
+  .polaroid .cap{ font-family:'Space Mono',monospace; font-size:11px; text-align:center; margin-top:8px; color:var(--ink-soft);}
+
+  .cards-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:20px;
+  }
+  @media (max-width:680px){ .cards-grid{grid-template-columns:1fr;} }
+  .card{
+    background:var(--cream); border:2px solid var(--ink); border-radius:14px; overflow:hidden;
+    box-shadow:4px 4px 0 var(--ink);
+  }
+  .card .tab{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px; color:#fff;
+    padding:9px 16px; display:flex; align-items:center; gap:8px;
+  }
+  .card .body{ padding:14px 16px 16px; font-size:14.5px;}
+  .card ul{ margin:0; padding-left:20px; }
+  .card li{ margin-bottom:6px; }
+  .card .body p{margin:0 0 8px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;}
+  .tag{ background:var(--paper-deep); border:1px solid var(--line); border-radius:20px; padding:3px 10px; font-size:12px; font-weight:700;}
+
+  .trivia-box{
+    border:2px dashed var(--crimson); border-radius:14px; background:#fff7ec;
+    padding:16px 20px; margin:6px 0 40px; position:relative;
+  }
+  .trivia-box h3{margin:0 0 8px; color:var(--crimson); font-size:18px;}
+  .trivia-box ul{margin:0; padding-left:20px;}
+  .trivia-box li{margin-bottom:5px;}
+  .trivia-box .note{font-size:12.5px; color:var(--ink-soft); margin-top:8px;}
+
+  .nav-buttons{ display:flex; justify-content:space-between; margin:10px 0 50px; }
+  .nav-buttons button{
+    font-family:'Fredoka',sans-serif; font-weight:600; cursor:pointer;
+    background:var(--ink); color:var(--cream); border:none; border-radius:30px;
+    padding:9px 18px; font-size:14px;
+  }
+  .nav-buttons button:hover{ background:var(--cobalt); }
+
+  footer{
+    max-width:980px; margin:30px auto 60px; padding:18px 16px; font-size:12px;
+    color:var(--ink-soft); border-top:2px dashed var(--line);
+  }
+  footer details summary{cursor:pointer; font-weight:700; margin-bottom:6px;}
+  footer ul{padding-left:18px; columns:2; column-gap:24px;}
+  footer li{margin-bottom:4px; break-inside:avoid;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="badge">✈ Culture Passport · No Football Allowed ⚽🚫</span>
+  <h1>The World Cup of Culture</h1>
+  <p>Same World Cup, different game. Instead of goals and penalty kicks, we're collecting passport stamps for the things that make each country unique: food, traditions, school life, animals, music and more.</p>
+  <div class="for-students">
+    <b>Your mission:</b> Visit every country below, read its page, and pick at least <b>5 facts per country</b> to turn into trivia questions for your classmates. Look for the 🎯 <b>Trivia Challenge</b> box at the bottom of each page for inspiration — but the best questions are the ones <i>you</i> discover yourself!
+  </div>
+</div>
+
+<div class="stamp-rail">
+  <div class="progress-line" id="progressLine">0 / 10 stamps collected</div>
+  <div class="stamps" id="stampNav"></div>
+</div>
+
+<div class="panel" id="introPanel">
+  <div class="intro-card">
+    <h2>📔 How this passport works</h2>
+    <ol>
+      <li>Tap a flag stamp above to open that country's page.</li>
+      <li>Read through the sections: Surprising Facts, Geography &amp; Nature, School Life, Food, Traditions, and Teen Life.</li>
+      <li>Jot down anything that surprises you — that's usually great trivia material!</li>
+      <li>Use the <b>Trivia Challenge</b> box at the end of each page as a model for the questions you write.</li>
+      <li>Try to collect all 10 stamps before class. Good luck, culture detective! 🕵️</li>
+    </ol>
+  </div>
+</div>
+
+<div class="panel" id="countryContainer"></div>
+
+<footer>
+  <p>Built for an English (B1) culture project. All facts adapted from country research notes. Photos are real photographs from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a>, used under their Creative Commons / public-domain licenses.</p>
+  <details>
+    <summary>Photo credits (click to expand)</summary>
+    <ul id="creditsList"></ul>
+  </details>
+</footer>
+
+<script>
+const WM = (file, w=1000) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${w}`;
+const FILEPAGE = (file) => `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}`;
+
+const ACCENTS = ['#D6443C','#EFA53D','#1F8076','#28456B'];
+
+const COUNTRIES = [
+{
+  id:"nz", flag:"🇳🇿", name:"New Zealand", nameEs:"Nueva Zelanda",
+  capital:"Wellington", population:"≈5.3 million", language:"English, Māori, NZ Sign Language", currency:"New Zealand Dollar",
+  images:[
+    {file:"Milford Sound, New Zealand (13).JPG", caption:"Milford Sound, Fiordland"},
+    {file:"Pavlova dessert.JPG", caption:"Pavlova, topped with fruit"},
+    {file:"Apteryx mantelli -Rotorua, North Island, New Zealand-8a.jpg", caption:"A kiwi, NZ's flightless bird"}
+  ],
+  weird:[
+    "Sheep outnumber people roughly five to one — about 23–25 million sheep for 5 million people.",
+    "There are no native land snakes anywhere in the country, unlike nearby Australia.",
+    "In 1893 it became the first self-governing country where women could vote nationally, thanks in part to activist Kate Sheppard.",
+    "The flightless kiwi bird is such a strong symbol that New Zealanders call themselves \"Kiwis.\"",
+    "Many Lord of the Rings scenes were filmed here, and fans visit the real Hobbiton movie set."
+  ],
+  nature:[
+    "Two main islands (North and South) plus hundreds of smaller ones, isolated enough to grow very unique wildlife.",
+    "Aoraki / Mount Cook is the highest peak (3,724 m) and holds deep importance in Māori culture.",
+    "Mount Ruapehu is both an active volcano and a popular ski resort.",
+    "Milford Sound is a dramatic fjord many call the most beautiful place in the country.",
+    "The Waitomo Caves glow blue thanks to thousands of glowworms on the ceiling.",
+    "The kea (a clever mountain parrot) is famous for opening backpacks and damaging cars."
+  ],
+  school:"School runs Primary (5–11) → Intermediate (11–13) → Secondary (13–18), and is compulsory from age 6 to 16. Lessons focus on creativity, critical thinking and teamwork, and students often study Māori language, history and traditions alongside outdoor education like camping trips.",
+  food:[
+    {name:"Hāngī", desc:"a traditional Māori method of cooking meat, potatoes and vegetables underground using heated stones"},
+    {name:"Meat pies", desc:"a classic bakery and school snack, often filled with beef, cheese or chicken"},
+    {name:"Fish and chips", desc:"a favourite takeaway, since the country is surrounded by ocean"},
+    {name:"Pavlova", desc:"a meringue, cream and fruit dessert claimed by both NZ and Australia"}
+  ],
+  traditions:[
+    {name:"The Haka", desc:"a powerful Māori performance of chanting and rhythmic movement, famously performed by the national rugby team before matches"},
+    {name:"Waitangi Day (Feb 6)", desc:"marks the 1840 signing of the Treaty of Waitangi, one of the country's most important holidays"}
+  ],
+  teen:{music:"Pop, hip-hop, indie rock, electronic", fashion:"Streetwear, sportswear, thrifted and sustainable fashion", social:"TikTok, Instagram, Snapchat, YouTube", hobbies:"Rugby, surfing, tramping (hiking), mountain biking, gaming, conservation projects"},
+  trivia:["What animal outnumbers people in New Zealand, and roughly by how much?","Why is the same mountain, Ruapehu, both dangerous and fun to visit?"]
+},
+{
+  id:"sn", flag:"🇸🇳", name:"Senegal", nameEs:"Senegal",
+  capital:"Dakar", population:"≈18 million", language:"French (official), Wolof (most widely spoken)", currency:"West African CFA franc",
+  images:[
+    {file:"Lac Rose in Senegal.jpg", caption:"Lake Retba, the Pink Lake"},
+    {file:"Senegalese Thieboudienne.JPG", caption:"Thieboudienne, the national dish"}
+  ],
+  weird:[
+    "Lake Retba (Lac Rose) can turn bubble-gum pink because of tiny microorganisms that produce a red pigment, strongest in the dry season.",
+    "Traditional wrestling, called Laamb, rivals football in popularity, and top wrestlers become national celebrities.",
+    "The famous Dakar Rally race once finished in Dakar — the city's name stuck even though the route changed.",
+    "More than 40 languages are spoken; many children grow up speaking Wolof at home and French at school.",
+    "The average age in Senegal is only about 19, so young people heavily shape music, fashion and social media trends."
+  ],
+  nature:[
+    "Senegal almost completely surrounds the small country of The Gambia, creating one of Africa's most unusual borders.",
+    "Two main seasons: a dry, dusty season (Nov–May) and a rainy season (Jun–Oct) with heavy storms.",
+    "Niokolo-Koba National Park (a UNESCO site) is home to lions, leopards, elephants and antelopes.",
+    "Djoudj National Bird Sanctuary is one of the world's most important bird migration stops."
+  ],
+  school:"School moves through Primary (≈6–12) → Lower Secondary (≈12–16) → Upper Secondary. Many students study in French at school while speaking Wolof at home — a real everyday challenge with two languages.",
+  food:[
+    {name:"Thieboudienne", desc:"the national dish: fish, rice and vegetables, often called the most famous Senegalese food"},
+    {name:"Yassa", desc:"chicken or fish cooked with onions and lemon for a sharp, strong flavour"},
+    {name:"Mafé", desc:"a rich stew built on peanuts, an important local crop"}
+  ],
+  traditions:[
+    {name:"Boubou & Grand Boubou", desc:"colourful, flowing robes worn for everyday life and for celebrations"},
+    {name:"Teranga", desc:"a core cultural value meaning hospitality and generosity toward guests"}
+  ],
+  teen:{music:"Mbalax (traditional rhythms + modern pop), made famous by Youssou N'Dour", fashion:"African wax-print fabrics mixed with sneakers and streetwear", social:"TikTok, Instagram, WhatsApp, Facebook", hobbies:"Football, wrestling, music and dance, gaming"},
+  trivia:["Why does Lake Retba sometimes turn pink?","What sport is almost as popular as football in Senegal?"]
+},
+{
+  id:"pa", flag:"🇵🇦", name:"Panama", nameEs:"Panamá",
+  capital:"Panama City", population:"≈4.5 million", language:"Spanish", currency:"Balboa & U.S. Dollar",
+  images:[
+    {file:"Ship passing through Panama Canal 01.jpg", caption:"A ship crossing the Panama Canal"},
+    {file:"Banco de Arena - San Blas - Guna Yala.jpg", caption:"The San Blas Islands, Guna Yala"},
+    {file:"Empollerada de Panamá.jpg", caption:"A traditional pollera dress"}
+  ],
+  weird:[
+    "Panama is one of the few countries that physically connects two continents: North and South America.",
+    "Before the Panama Canal, ships had to sail all the way around South America — the canal changed world trade forever.",
+    "Because the country is so narrow, you can travel from the Pacific Ocean to the Atlantic in just a few hours.",
+    "More bird species (over 1,000) have been recorded here than in the US and Canada combined.",
+    "The Guna people still create colourful traditional textiles called molas, worn as part of daily dress."
+  ],
+  nature:[
+    "Sits between Costa Rica and Colombia, with coastlines on both the Pacific Ocean and the Caribbean Sea.",
+    "Volcán Barú, the highest point (3,475 m), offers views of both oceans on a clear day.",
+    "Sloths move so slowly that algae can grow right on their fur.",
+    "The Harpy Eagle, the national bird, is one of the most powerful eagles on Earth.",
+    "The San Blas Islands are home to more than 350 tropical islands, many inhabited by the Guna people."
+  ],
+  school:"Primary (6–12) → Lower Secondary (12–15) → Upper Secondary (15–18), taught in Spanish with growing emphasis on English due to trade and tourism. Schools in Panama City tend to have more resources than rural schools.",
+  food:[
+    {name:"Sancocho", desc:"the national soup, made with chicken, vegetables and herbs"},
+    {name:"Arroz con pollo", desc:"chicken and rice, popular at celebrations"},
+    {name:"Patacones", desc:"fried green plantains, a common side dish"},
+    {name:"Ceviche", desc:"fresh seafood marinated in citrus, very popular on the coast"}
+  ],
+  traditions:[
+    {name:"Pollera", desc:"a beautifully embroidered festival dress that can take months to create"},
+    {name:"Carnival", desc:"one of the country's biggest celebrations, full of music, dance and parades"}
+  ],
+  teen:{music:"Reggaeton, salsa, Latin pop, urban music", fashion:"Sportswear, trainers, tropical and streetwear styles", social:"TikTok, Instagram, WhatsApp, YouTube", hobbies:"Football, basketball, beach activities, dancing, gaming"},
+  trivia:["Which two continents does Panama physically connect?","Why can you visit two different oceans in the same day in Panama?"]
+},
+{
+  id:"za", flag:"🇿🇦", name:"South Africa", nameEs:"Sudáfrica",
+  capital:"Pretoria, Cape Town & Bloemfontein", population:"≈63 million", language:"12 official languages", currency:"Rand",
+  images:[
+    {file:"Waiting Sunset Table Mountain Cape Town South Africa Luca Galuzzi 2004.JPG", caption:"Table Mountain at sunset, Cape Town"},
+    {file:"Braai Meat, Cape Town, South Africa-3626.jpg", caption:"Meat grilling at a braai"}
+  ],
+  weird:[
+    "South Africa has three capital cities — each one handles a different branch of government.",
+    "It has 12 official languages, including English, Afrikaans, Zulu, Xhosa and Sotho.",
+    "Scientists believe Table Mountain is older than the Himalayas.",
+    "The Vredefort Crater is the world's largest visible meteor crater, formed about two billion years ago.",
+    "Nelson Mandela had several different names through his life, including Rolihlahla and Madiba."
+  ],
+  nature:[
+    "Climate ranges from Mediterranean (Western Cape) to dry interior to warm, humid coastline in the east.",
+    "The Drakensberg Mountains form the highest range in Southern Africa, full of cliffs and waterfalls.",
+    "The \"Big Five\" — lion, leopard, elephant, rhinoceros and buffalo — are major wildlife attractions today.",
+    "Kruger National Park is one of Africa's largest wildlife reserves."
+  ],
+  school:"Primary covers Grades 1–7 and Secondary covers Grades 8–12, finishing with the National Senior Certificate. Students often learn in English, Afrikaans and local languages, and many schools have strong rugby and cricket traditions.",
+  food:[
+    {name:"Braai", desc:"a traditional barbecue and a favourite weekend gathering"},
+    {name:"Bobotie", desc:"a spiced meat dish topped with egg, often called the national dish"},
+    {name:"Biltong", desc:"a popular dried, cured meat snack"},
+    {name:"Bunny chow", desc:"a hollowed loaf of bread filled with curry, from Durban"}
+  ],
+  traditions:[
+    {name:"Heritage Day", desc:"celebrated every September, honouring the country's many cultural backgrounds"},
+    {name:"Beadwork & patterns", desc:"Zulu beadwork, Xhosa patterns and Ndebele geometric designs each have a distinct style"}
+  ],
+  teen:{music:"Amapiano (house + jazz + deep bass), hip-hop, Afro-pop, gospel", fashion:"Streetwear, designer sneakers, African-inspired clothing", social:"TikTok, Instagram, YouTube, WhatsApp", hobbies:"Football, rugby, cricket, music production, gaming"},
+  trivia:["Why does South Africa have three capital cities instead of one?","Which of the 'Big Five' animals would you most want to see, and why?"]
+},
+{
+  id:"ec", flag:"🇪🇨", name:"Ecuador", nameEs:"Ecuador",
+  capital:"Quito", population:"≈18 million", language:"Spanish", currency:"U.S. Dollar",
+  images:[
+    {file:"Gigantic Turtle on the Island of Santa Cruz in the Galapagos.JPG", caption:"A Galápagos giant tortoise"},
+    {file:"Ceviche ecuador.JPG", caption:"Ecuadorian-style ceviche"}
+  ],
+  weird:[
+    "The country is literally named after the Equator, which passes right through it.",
+    "Mount Chimborazo's summit is the point on Earth farthest from the planet's centre — technically the closest point to outer space.",
+    "The unique wildlife of the Galápagos Islands helped inspire Charles Darwin's theory of evolution.",
+    "Ecuador has four very different regions: Coast, Andes, Amazon and the Galápagos Islands.",
+    "Unlike most South American countries, Ecuador uses the U.S. Dollar as its currency."
+  ],
+  nature:[
+    "Climate shifts dramatically by region: hot coast, cool Andes, humid Amazon rainforest, and the unique Galápagos climate.",
+    "Cotopaxi is one of the world's highest active volcanoes.",
+    "The Giant Galápagos Tortoise can live for more than 100 years.",
+    "The Andean Condor is the country's national symbol.",
+    "The Amazon Rainforest here is one of the most biodiverse ecosystems on Earth."
+  ],
+  school:"Education runs through Basic Education and then Bachillerato (final secondary years), mostly in Spanish, though some Indigenous communities also teach Kichwa or Shuar. Uniforms are very common, often with separate sets for class and sport.",
+  food:[
+    {name:"Ceviche", desc:"seafood marinated in citrus juice"},
+    {name:"Locro de papa", desc:"a potato soup served with cheese and avocado"},
+    {name:"Llapingachos", desc:"potato patties often served with eggs and sausage"}
+  ],
+  traditions:[
+    {name:"Inti Raymi", desc:"an ancient Andean festival celebrating the sun"},
+    {name:"Day of the Dead", desc:"families visit cemeteries and prepare special foods"}
+  ],
+  teen:{music:"Reggaeton, Latin pop, cumbia, pasillo", fashion:"Jeans, trainers, sportswear, urban fashion", social:"TikTok, Instagram, WhatsApp, YouTube", hobbies:"Football, volleyball, hiking, content creation"},
+  trivia:["Why is Ecuador's name a perfect match for where it sits on the map?","Which famous scientist was inspired by the animals of the Galápagos?"]
+},
+{
+  id:"ma", flag:"🇲🇦", name:"Morocco", nameEs:"Marruecos",
+  capital:"Rabat", population:"≈37 million", language:"Arabic & Berber (official), French widely used", currency:"Moroccan Dirham",
+  images:[
+    {file:"Chefchaouen, Morocco (Unsplash).jpg", caption:"The blue streets of Chefchaouen"},
+    {file:"Moroccan TAGINE.JPG", caption:"A traditional tagine"}
+  ],
+  weird:[
+    "Stray cats are everywhere and treated like community pets, since Islamic tradition views cats as clean, respected animals.",
+    "In the mountain town of Chefchaouen, almost every wall and door is painted brilliant blue — a tradition some say started with Jewish refugees in the 1930s.",
+    "Wearing the same outfit two days in a row is seen as a real social mistake, since cleanliness matters so much.",
+    "Photographers sometimes ask people to say \"bread\" or \"tea\" in Arabic instead of \"cheese,\" because those words naturally shape the mouth into a smile.",
+    "The red Fez hat gets its name from the city of Fez, once the only place growing the berries used to dye its wool."
+  ],
+  nature:[
+    "The Atlas Mountains create a natural wall, and towns like Ifrane can look like a snowy Swiss village in winter.",
+    "On the other side lies the Sahara, the world's largest hot desert, with dunes reaching up to 180 metres.",
+    "The Barbary macaque is a wild monkey adapted to live in the mountain cedar forests.",
+    "In a single day, a traveller can feel Mediterranean sea breeze, freezing mountain air and intense desert heat."
+  ],
+  school:"Students wear a simple white or blue lab coat over their clothes (so family wealth isn't visible), and the school day splits into a morning and afternoon block with a long lunch break at home. Maths and science are often taught in French, history in Arabic, and English is studied as a third language.",
+  food:[
+    {name:"Couscous", desc:"steamed semolina topped with vegetables and meat, traditionally shared every Friday"},
+    {name:"Tagine", desc:"a slow-cooked stew named after its cone-shaped clay pot, designed to trap and recycle steam"},
+    {name:"Mint tea", desc:"sweet green tea poured from high above the glass to create a foam — a sign of hospitality"}
+  ],
+  traditions:[
+    {name:"Hospitality rituals", desc:"serving mint tea with a thick foam is considered an essential welcome for guests"}
+  ],
+  teen:{music:"Rap and pop in Darija (Moroccan Arabic), mixing trap beats with African rhythms and French lyrics", fashion:"International sneakers and baggy jeans with hoodies featuring Arabic calligraphy", social:"TikTok, Instagram, WhatsApp group chats", hobbies:"Street football (often using backpacks as goalposts)"},
+  trivia:["Why do people in Chefchaouen paint their walls blue?","Why might math, history and English all be taught in different languages at a Moroccan school?"]
+},
+{
+  id:"uz", flag:"🇺🇿", name:"Uzbekistan", nameEs:"Uzbekistán",
+  capital:"Tashkent", population:"≈36 million", language:"Uzbek (official), Russian widely used", currency:"Uzbekistani Som",
+  images:[
+    {file:"Registan square 2014.JPG", caption:"The Registan, Samarkand"},
+    {file:"Plov Tashkent.jpg", caption:"Plov, the national rice dish"}
+  ],
+  weird:[
+    "During big festivals, chefs cook up to eight tons of rice at once in giant cast-iron pots called kazans.",
+    "Uzbekistan is one of only two \"double-landlocked\" countries in the world — you must cross at least two borders to reach an ocean.",
+    "Many people believe whistling indoors will summon evil spirits and bring bad luck with money.",
+    "If a piece of bread falls on the floor, it's often picked up, kissed, and placed somewhere respectful, since bread is considered holy.",
+    "A traditional greeting is to place your right hand over your heart and bow slightly — it means \"you are in my heart.\""
+  ],
+  nature:[
+    "More than half the country is covered by the red sands of the Kyzylkum Desert, where summers regularly top 45°C.",
+    "The Tian Shan Mountains in the east are covered with wild walnut forests and ancient apple orchards — scientists believe today's apples trace back to this region.",
+    "The climate is extremely continental: dry, hot summers and freezing, snowy winters.",
+    "The endangered snow leopard lives high in the mountains and is a symbol of the country's wild heritage."
+  ],
+  school:"Students wear formal uniforms (dark trousers/jackets and ties for boys, dark skirts and white blouses for girls). Because schools are large, many run on a shift system, and the curriculum — shaped by Soviet history — includes both Uzbek and Russian alongside advanced maths and chemistry.",
+  food:[
+    {name:"Plov", desc:"a UNESCO-recognised dish of rice, meat, carrots, raisins and chickpeas, steamed together without stirring"}
+  ],
+  traditions:[
+    {name:"Communal cooking", desc:"Plov is traditionally prepared by men called Oshpaz for weddings and big family gatherings"}
+  ],
+  teen:{music:"Modern electronic pop mixed with traditional brass horns", fashion:"Khan-Atlas silk dresses styled with sneakers and denim jackets", social:"Telegram, used for almost everything because it needs very little mobile data", hobbies:"Chess (the country produces many young grandmasters), video games"},
+  trivia:["What does it mean for a country to be 'double-landlocked'?","Why might dropping bread on the floor be a bigger deal in Uzbekistan than elsewhere?"]
+},
+{
+  id:"jo", flag:"🇯🇴", name:"Jordan", nameEs:"Jordania",
+  capital:"Amman", population:"≈11 million", language:"Arabic", currency:"Jordanian Dinar",
+  images:[
+    {file:"Al-Khazneh (The Treasury), Petra, Jordan.jpg", caption:"Al-Khazneh (The Treasury), Petra"},
+    {file:"Jordan, Wadi Rum Desert, Camel.jpg", caption:"A camel in the Wadi Rum desert"},
+    {file:"Jordanian mansaf.jpg", caption:"Mansaf, served on a shared tray"}
+  ],
+  weird:[
+    "The Dead Sea is nearly ten times saltier than the ocean — the water is so dense that you simply float.",
+    "Petra's temples were carved directly into pink sandstone cliffs over 2,000 years ago.",
+    "Ancient hospitality rules say that if a stranger arrives at your home, you must feed and protect them for three days before even asking who they are.",
+    "After finishing Arabic coffee, you shake your cup side-to-side to politely say \"no more, thank you.\"",
+    "Public displays of affection between friends of the opposite sex are generally seen as disrespectful."
+  ],
+  nature:[
+    "Wadi Rum, the \"Valley of the Moon,\" looks so otherworldly that filmmakers shoot Mars and Star Wars scenes there.",
+    "The Dead Sea Depression sits 430 metres below sea level — the lowest dry point on Earth's surface.",
+    "Despite being one of the driest countries in the world, western mountains get enough winter rain for pine forests and olive trees.",
+    "Conservationists have saved the Arabian Oryx, a striking white antelope, from extinction."
+  ],
+  school:"The school week runs Sunday–Thursday (Friday is the holy day), with classes ending around 1:30 PM to avoid the afternoon heat. The Tawjihi, a major final exam, decides university entry — and when results are released, families celebrate in the streets.",
+  food:[
+    {name:"Mansaf", desc:"tender lamb in a tangy yogurt sauce, served over rice on a huge shared tray with flatbread, nuts and almonds"}
+  ],
+  traditions:[
+    {name:"Coffee etiquette", desc:"a small cup shake signals you don't want a refill of Arabic coffee"},
+    {name:"Three-day hospitality rule", desc:"hosting and protecting a stranger for three days before asking who they are"}
+  ],
+  teen:{music:"Arabic hip-hop and electronic versions of Dabke, a traditional foot-stomping line dance", fashion:"Colourful headscarves with long coats for girls, designer hoodies and sneakers for boys", social:"TikTok, Instagram", hobbies:"Football, café hangouts, gaming, watching European football"},
+  trivia:["Why can you float so easily in the Dead Sea?","What hospitality rule protects a stranger who shows up at someone's door in Jordan?"]
+},
+{
+  id:"kr", flag:"🇰🇷", name:"South Korea", nameEs:"Corea del Sur",
+  capital:"Seoul", population:"≈52 million", language:"Korean", currency:"South Korean Won",
+  images:[
+    {file:"Ulsanbawi Seoraksan National Park.jpg", caption:"Seoraksan National Park"},
+    {file:"Kimchi1.jpg", caption:"Kimchi, the national dish"}
+  ],
+  weird:[
+    "Because the word for \"four\" sounds like the word for \"death,\" many buildings replace the number 4 with the letter F on elevators.",
+    "Writing someone's name in red ink is a major taboo, since red ink was historically used for the deceased.",
+    "Many older Koreans believe in \"fan death\" — that an electric fan running in a closed room overnight can be dangerous.",
+    "Education is valued so highly that some parents give plastic surgery as a high school graduation gift.",
+    "Babies were once considered one year old at birth under a traditional Korean age-counting system."
+  ],
+  nature:[
+    "Four distinct seasons: humid summer monsoons, brilliant autumn colours, and freezing winters with Siberian winds.",
+    "Seoraksan Mountain is famous for jagged granite peaks and dramatic autumn colours.",
+    "Jeju Island is a volcanic getaway with the dormant volcano Hallasan and walkable lava tubes.",
+    "White cranes migrate to the Demilitarized Zone every winter."
+  ],
+  school:"School runs roughly 8 AM–4 PM, but most teens then head to Hagwons (private evening academies) until curfew. Students remove their shoes at the entrance and clean the classroom themselves. Everything builds toward the Suneung, an eight-hour college entrance exam so important that flights are paused during its listening test.",
+  food:[
+    {name:"Kimchi", desc:"fermented, chili-seasoned cabbage and the country's signature dish"},
+    {name:"Korean BBQ", desc:"meat grilled together at the table, a favourite teen hangout"},
+    {name:"Tteokbokki", desc:"chewy rice cakes in a sweet, spicy chili sauce"}
+  ],
+  traditions:[
+    {name:"Kimchi refrigerators", desc:"special fridges exist just to keep kimchi perfectly fermented at home"}
+  ],
+  teen:{music:"K-Pop — collecting photo cards and practising choreography", fashion:"Multi-step skincare for the \"glass skin\" trend", social:"KakaoTalk, used for texting, stickers and splitting bills", hobbies:"PC Bangs (gaming cafés), Noreabang (karaoke booths)"},
+  trivia:["Why do many Korean buildings skip the number 4?","What does a student do at the end of the school day to learn responsibility?"]
+},
+{
+  id:"tr", flag:"🇹🇷", name:"Turkey", nameEs:"Turquía",
+  capital:"Ankara", population:"≈85 million", language:"Turkish", currency:"Turkish Lira",
+  images:[
+    {file:"Pamukkale Hierapolis Travertine pools.JPG", caption:"The white travertine terraces of Pamukkale"},
+    {file:"Turkish Baklava.JPG", caption:"Baklava, layered with pistachios"}
+  ],
+  weird:[
+    "Istanbul is the only city in the world that sits on two continents — a short ferry ride crosses from Europe to Asia.",
+    "A popular dessert, Tavuk Göğsü, is a creamy pudding made with real shredded chicken breast, boiled until it's invisible.",
+    "Turkey holds the world record for bread consumption — about 200 kilos per person every year.",
+    "Throwing away bread is seen almost as a sin; leftover bread is often hung on fences for animals and birds.",
+    "The historical Saint Nicholas, who inspired the legend of Santa Claus, was a bishop born in ancient Turkey."
+  ],
+  nature:[
+    "Three seas border the country, creating very different regional climates from coast to coast.",
+    "Pamukkale (\"Cotton Castle\") is famous for bright white limestone terraces formed by thermal springs.",
+    "Mount Ararat is the legendary final landing place of Noah's Ark in religious texts.",
+    "The rare Van Cat has one blue eye and one amber eye, and is known for loving to swim."
+  ],
+  school:"The school day runs roughly 8:30 AM–3:30 PM, and phones are locked away at the start of each day. At age 13, students take the competitive LGS exam to enter a prestigious high school, and the week begins and ends with the whole school singing the national anthem.",
+  food:[
+    {name:"Kebabs", desc:"seasoned meats grilled over charcoal"},
+    {name:"Baklava", desc:"a pastry of paper-thin dough layers, pistachios and sweet syrup"},
+    {name:"Turkish tea", desc:"brewed in a double-teapot and served constantly in tulip-shaped glasses"}
+  ],
+  traditions:[
+    {name:"Tea hospitality", desc:"refusing a cup of tea from a host can be considered hurtful"}
+  ],
+  teen:{music:"Stadium chants for local football clubs", fashion:"Oversized graphic hoodies, ripped jeans, retro sneakers", social:"YouTube, TikTok", hobbies:"Tavla (backgammon), café hangouts by the sea, watching football"},
+  trivia:["What unusual ingredient is hidden inside the dessert Tavuk Göğsü?","Why is living in Istanbul a little different from living in most other cities?"]
+}
+];
+
+let activeId = null;
+const visited = new Set();
+
+function renderNav(){
+  const nav = document.getElementById('stampNav');
+  nav.innerHTML = '';
+  COUNTRIES.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'stamp';
+    btn.id = 'stamp-'+c.id;
+    btn.innerHTML = `<div class="circle">${c.flag}</div><span class="label">${c.name}</span>`;
+    btn.addEventListener('click', ()=> showCountry(c.id));
+    nav.appendChild(btn);
+  });
+}
+
+function updateProgress(){
+  document.getElementById('progressLine').textContent = `${visited.size} / ${COUNTRIES.length} stamps collected`;
+}
+
+function buildCountryHTML(c, idx){
+  const accent = ACCENTS[idx % ACCENTS.length];
+  const photos = c.images.map(im => `
+    <div class="polaroid">
+      <img src="${WM(im.file)}" alt="${im.caption}" loading="lazy">
+      <div class="cap">${im.caption}</div>
+    </div>`).join('');
+
+  const weirdLis = c.weird.map(w=>`<li>${w}</li>`).join('');
+  const natureLis = c.nature.map(w=>`<li>${w}</li>`).join('');
+  const foodLis = c.food.map(f=>`<li><b>${f.name}</b> — ${f.desc}</li>`).join('');
+  const tradLis = c.traditions.map(f=>`<li><b>${f.name}</b> — ${f.desc}</li>`).join('');
+  const trivLis = c.trivia.map(t=>`<li>${t}</li>`).join('');
+
+  return `
+  <div class="country-head" style="--ink-accent:${accent}">
+    <div class="flag-stamp" style="border-color:${accent}; color:${accent};">${c.flag}</div>
+    <div class="titles">
+      <h2 style="color:${accent}">${c.name}</h2>
+      <p class="es">${c.nameEs}</p>
+      <div class="facts-row">
+        <span><b>Capital:</b> ${c.capital}</span>
+        <span><b>Population:</b> ${c.population}</span>
+        <span><b>Language(s):</b> ${c.language}</span>
+        <span><b>Currency:</b> ${c.currency}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="photo-strip">${photos}</div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="tab" style="background:${accent}">🤯 Surprising Facts</div>
+      <div class="body"><ul>${weirdLis}</ul></div>
+    </div>
+    <div class="card">
+      <div class="tab" style="background:${accent}">🌍 Geography &amp; Nature</div>
+      <div class="body"><ul>${natureLis}</ul></div>
+    </div>
+    <div class="card">
+      <div class="tab" style="background:${accent}">📚 School Life</div>
+      <div class="body"><p>${c.school}</p></div>
+    </div>
+    <div class="card">
+      <div class="tab" style="background:${accent}">🍲 Food</div>
+      <div class="body"><ul>${foodLis}</ul></div>
+    </div>
+    <div class="card">
+      <div class="tab" style="background:${accent}">👘 Traditions</div>
+      <div class="body"><ul>${tradLis}</ul></div>
+    </div>
+    <div class="card">
+      <div class="tab" style="background:${accent}">🎵 Teen Life</div>
+      <div class="body">
+        <p><b>Music:</b> ${c.teen.music}</p>
+        <p><b>Fashion:</b> ${c.teen.fashion}</p>
+        <p><b>Social media:</b> ${c.teen.social}</p>
+        <p><b>Hobbies:</b> ${c.teen.hobbies}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="trivia-box">
+    <h3>🎯 Trivia Challenge</h3>
+    <ul>${trivLis}</ul>
+    <p class="note">Use these as a model — your own trivia questions don't have to match!</p>
+  </div>
+
+  <div class="nav-buttons">
+    <button id="prevBtn">⟵ Previous country</button>
+    <button id="nextBtn">Next country ⟶</button>
+  </div>
+  `;
+}
+
+function showCountry(id){
+  activeId = id;
+  visited.add(id);
+  document.getElementById('introPanel').style.display = 'none';
+
+  const idx = COUNTRIES.findIndex(c=>c.id===id);
+  const c = COUNTRIES[idx];
+  const container = document.getElementById('countryContainer');
+  container.innerHTML = `<div class="country-page active">${buildCountryHTML(c, idx)}</div>`;
+
+  document.querySelectorAll('.stamp').forEach(s=>s.classList.remove('active'));
+  document.getElementById('stamp-'+id).classList.add('active');
+  if(visited.has(id)) document.getElementById('stamp-'+id).classList.add('visited');
+
+  document.getElementById('prevBtn').addEventListener('click', ()=>{
+    const newIdx = (idx - 1 + COUNTRIES.length) % COUNTRIES.length;
+    showCountry(COUNTRIES[newIdx].id);
+  });
+  document.getElementById('nextBtn').addEventListener('click', ()=>{
+    const newIdx = (idx + 1) % COUNTRIES.length;
+    showCountry(COUNTRIES[newIdx].id);
+  });
+
+  updateProgress();
+  window.scrollTo({top: document.querySelector('.stamp-rail').offsetTop - 10, behavior:'smooth'});
+}
+
+function renderCredits(){
+  const list = document.getElementById('creditsList');
+  const seen = new Set();
+  COUNTRIES.forEach(c=>{
+    c.images.forEach(im=>{
+      if(seen.has(im.file)) return;
+      seen.add(im.file);
+      const li = document.createElement('li');
+      li.innerHTML = `${im.caption}: <a href="${FILEPAGE(im.file)}" target="_blank" rel="noopener">Wikimedia Commons</a>`;
+      list.appendChild(li);
+    });
+  });
+}
+
+renderNav();
+renderCredits();
+updateProgress();
+</script>
+</body>
+</html>
